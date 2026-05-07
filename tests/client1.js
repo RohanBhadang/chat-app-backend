@@ -6,7 +6,7 @@
 const { io } = require("socket.io-client");
 const axios = require("axios");
 
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "http://localhost:9000/api";
 const ALICE_ID = "69fc1fc6acd0e7c12b07387f";
 const BOB_ID = "69fc1fc6acd0e7c12b073880";
 
@@ -60,7 +60,7 @@ async function initialize() {
 function connectSocket() {
   console.log("🔌 Connecting to socket...");
 
-  socket = io("http://localhost:3000", {
+  socket = io("http://localhost:9000", {
     auth: {
       token: accessToken,
     },

@@ -2,3 +2,4 @@ node_modules/
 .env
 CHANGES_SUMMARY.md
 REAL_CHAT_GUIDE.md
+BACKEND_API_SPEC.md

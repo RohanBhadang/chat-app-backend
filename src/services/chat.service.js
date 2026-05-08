@@ -24,13 +24,16 @@ exports.getOrCreateOneToOneChat = async (userId1, userId2) => {
 
 // Save message
 exports.saveMessage = async (chatId, senderId, message) => {
+  if (!chatId || !senderId || !message) {
+    throw new Error("Missing required fields");
+  }
+
   const newMessage = await Message.create({
     chatId,
     senderId,
     message,
   });
 
-  // Update chat's lastMessage
   await Chat.findByIdAndUpdate(chatId, {
     lastMessage: newMessage._id,
   });

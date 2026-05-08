@@ -8,6 +8,7 @@ const chatController = require("../controllers/chat.controller");
 // Protect all chat routes with auth middleware
 router.use(authMiddleware);
 
+
 router.post("/create-one-to-one", asyncHandler(chatController.createOneToOneChat));
 router.get("/:chatId", asyncHandler(chatController.getMessages));
 

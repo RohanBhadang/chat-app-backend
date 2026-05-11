@@ -1,25 +1,45 @@
 const jwt = require("jsonwebtoken");
 
-exports.generateAccessToken = (userId) => {
+// ACCESS TOKEN
+exports.generateAccessToken = (user) => {
   return jwt.sign(
-    { userId },
+    {
+      _id: user._id,
+      email: user.email,
+    },
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: "15m" }
+    {
+      expiresIn: "30d",
+    }
   );
 };
 
-exports.generateRefreshToken = (userId) => {
+// REFRESH TOKEN
+exports.generateRefreshToken = (user) => {
   return jwt.sign(
-    { userId },
+    {
+      _id: user._id,
+      email: user.email,
+    },
     process.env.JWT_REFRESH_SECRET,
-    { expiresIn: "7d" }
+    {
+      expiresIn: "7d",
+    }
   );
 };
 
+// VERIFY ACCESS TOKEN
 exports.verifyAccessToken = (token) => {
-  return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  return jwt.verify(
+    token,
+    process.env.JWT_ACCESS_SECRET
+  );
 };
 
+// VERIFY REFRESH TOKEN
 exports.verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+  return jwt.verify(
+    token,
+    process.env.JWT_REFRESH_SECRET
+  );
 };

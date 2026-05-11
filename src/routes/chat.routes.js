@@ -3,13 +3,23 @@ const router = express.Router();
 
 const asyncHandler = require("../middlewares/asyncHandler");
 const authMiddleware = require("../middlewares/auth.middleware");
+const chatMiddleware = require("../middlewares/chat.middleware"); // 👈 ADD THIS
 const chatController = require("../controllers/chat.controller");
 
-// Protect all chat routes with auth middleware
+// Protect all chat routes
 router.use(authMiddleware);
 
+// 🔥 CREATE CHAT (ONLY IF CONNECTED)
+router.post(
+  "/create-one-to-one/:userId",
+  chatMiddleware,
+  asyncHandler(chatController.createOneToOneChat)
+);
 
-router.post("/create-one-to-one", asyncHandler(chatController.createOneToOneChat));
-router.get("/:chatId", asyncHandler(chatController.getMessages));
+// GET MESSAGES (optional: also secure it if needed)
+router.get(
+  "/:chatId",
+  asyncHandler(chatController.getMessages)
+);
 
 module.exports = router;

@@ -2,9 +2,15 @@ const chatService = require("../services/chat.service");
 
 // Create or get one-to-one chat
 exports.createOneToOneChat = async (req, res, next) => {
+//   console.log("BODY:", req.body);
+// console.log("PARAMS:", req.params);
   try {
-    const userId = req.user.userId; // From JWT token via middleware
-    const { recipientId } = req.body;
+    const userId = req.user._id; // From JWT token via middleware
+    const recipientId = req.params.userId;
+
+    console.log("USER ID:", userId);
+    console.log("RECIPIENT ID:", recipientId);
+
 
     if (!recipientId) {
       return res.status(400).json({
@@ -20,6 +26,8 @@ exports.createOneToOneChat = async (req, res, next) => {
       });
     }
 
+    console.log(userId, recipientId);
+
     const chat = await chatService.getOrCreateOneToOneChat(
       userId,
       recipientId
@@ -34,6 +42,7 @@ exports.createOneToOneChat = async (req, res, next) => {
     next(err);
   }
 };
+
 
 // Get messages for a chat
 exports.getMessages = async (req, res, next) => {

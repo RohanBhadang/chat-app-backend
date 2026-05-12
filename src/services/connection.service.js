@@ -1,18 +1,30 @@
-const { checkIfConnected } = require("../services/connection.service");
+const ConnectionRequest =
+require("../models/ConnectionRequest.model");
 
-module.exports = async (req, res, next) => {
+exports.checkIfConnected =
+async (user1, user2) => {
 
-  const user1 = req.user._id;
-  const user2 = req.params.userId; // chat partner
+  const connection =
+    await ConnectionRequest.findOne({
 
-  const isConnected = await checkIfConnected(user1, user2);
+      $or: [
 
-  if (!isConnected) {
-    return res.status(403).json({
-      status: "error",
-      message: "You are not connected, chat not allowed",
+        {
+          fromUserId: user1,
+          toUserId: user2,
+          status: "accepted",
+        },
+
+        {
+          fromUserId: user2,
+          toUserId: user1,
+          status: "accepted",
+        },
+
+      ],
+
     });
-  }
 
-  next();
+  return !!connection;
+
 };

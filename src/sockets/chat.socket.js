@@ -8,13 +8,19 @@ module.exports = (io) => {
     const token = socket.handshake.auth?.token;
 
     if (!token) return next(new Error("No token"));
+     if (!socket.user?._id) {
+    console.log("❌ No user in socket");
+    return;
+  }
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
       
       socket.user = {
-        _id: decoded.userId
+        _id: decoded._id,
+        name: decoded.name,
+        email: decoded.email,
       };
 
       next();

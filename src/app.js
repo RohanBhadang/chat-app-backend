@@ -13,7 +13,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/requests", requestRoutes);
+app.use("/api/requests", requestRoutes);    
 
 // GLOBAL ERROR HANDLER
 app.use(errorHandler);

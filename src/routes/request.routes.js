@@ -10,6 +10,8 @@ require("../middlewares/auth.middleware");
 const {
   sendConnectionRequest,
   reviewConnectionRequest,
+    getReceivedRequests,
+  getConnections,
 } = require(
   "../controllers/request.controller"
 );
@@ -29,5 +31,17 @@ requestRouter.post(
   reviewConnectionRequest
 );
 
+// GET RECEIVED REQUESTS
+
+requestRouter.get(
+  "/received",
+  getReceivedRequests
+);
+
+// GET CONNECTIONS
+requestRouter.get(
+  "/connections",
+  getConnections
+);
 module.exports =
 requestRouter;

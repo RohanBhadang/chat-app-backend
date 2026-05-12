@@ -5,6 +5,8 @@ const {
   reviewRequestService,
 } = require("../services/request.service");
 
+const ConnectionRequest =
+require("../models/ConnectionRequest.model.js");
 
 // SEND CONNECTION REQUEST
 const sendConnectionRequest =
@@ -129,9 +131,160 @@ async (req, res) => {
   }
 
 };
+const getReceivedRequests =
+async (req, res) => {
 
+  try {
+
+    const loggedInUser =
+      req.user;
+
+    const connectionRequests =
+      await ConnectionRequest.find({
+
+        toUserId:
+          loggedInUser._id,
+
+        status:
+          "interested",
+
+      }).populate(
+        "fromUserId",
+        "name email"
+      );
+
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        "Requests fetched successfully",
+
+      data:
+        connectionRequests,
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+
+      success: false,
+
+      message:
+        error.message,
+
+    });
+
+  }
+
+};
+// GET CONNECTIONS
+// ==============================
+
+const getConnections =
+async (req, res) => {
+ console.log("ROUTE HIT");
+  try {
+
+    const loggedInUser =
+      req.user;
+
+    const connectionRequest =
+      await ConnectionRequest.find({
+
+        $or: [
+
+          {
+            toUserId:
+              loggedInUser._id,
+
+            status:
+              "accepted",
+          },
+
+          {
+            fromUserId:
+              loggedInUser._id,
+
+            status:
+              "accepted",
+          },
+
+        ],
+
+      })
+      .populate(
+  "fromUserId",
+  "name email"
+)
+.populate(
+  "toUserId",
+  "name email"
+);
+
+
+
+    const data =
+      connectionRequest.map((row) => {
+
+        if (
+
+          row.fromUserId._id
+            .toString()
+
+          ===
+
+          loggedInUser._id
+            .toString()
+
+        ) {
+
+          return row.toUserId;
+
+        }
+
+        return row.fromUserId;
+
+      });
+
+
+
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        "Connections fetched successfully",
+
+      data,
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+
+      success: false,
+
+      message:
+        error.message,
+
+    });
+
+  }
+
+};
 
 module.exports = {
   sendConnectionRequest,
   reviewConnectionRequest,
+  getReceivedRequests,
+  getConnections,
+
+
 };

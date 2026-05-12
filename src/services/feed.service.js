@@ -1,37 +1,40 @@
-const User = require("../models/User.model");
-const ConnectionRequest = require("../models/ConnectionRequest.model");
+const User = require("../models/User.model.js");
+const ConnectionRequest = require("../models/ConnectionRequest.model.js");
+const AppError = require("../utils/appError.js");
 
-const getFeedUsersService = async (loggedInUser, page, limit) => {
 
-  const skip = (page - 1) * limit;
+const getFeedUsers = async (currentUserId) => {
+  try {
+  
+    const connections = await ConnectionRequest.find({
+      $or: [
+        { fromUserId: currentUserId },
+        { toUserId: currentUserId },
+      ],
+    }).select("fromUserId toUserId");
 
-  const connectionRequests = await ConnectionRequest.find({
-    $or: [
-      { fromUserId: loggedInUser._id },
-      { toUserId: loggedInUser._id },
-    ],
-  }).select("fromUserId toUserId");
+    // 🔥 STEP 2: build exclusion list
+    const excludedUsers = new Set();
 
-  const hideUsers = new Set();
+    connections.forEach((c) => {
+      if (c?.fromUserId) excludedUsers.add(c.fromUserId.toString());
+      if (c?.toUserId) excludedUsers.add(c.toUserId.toString());
+    });
 
-  connectionRequests.forEach((r) => {
-    if (r?.fromUserId) hideUsers.add(r.fromUserId.toString());
-    if (r?.toUserId) hideUsers.add(r.toUserId.toString());
-  });
+    // 🔥 STEP 3: always exclude self
+    excludedUsers.add(currentUserId.toString());
 
-  hideUsers.add(loggedInUser._id.toString());
+    // 🔥 STEP 4: fetch clean feed
+    const users = await User.find({
+      _id: { $nin: Array.from(excludedUsers) },
+    }).select("-password -refreshToken");
 
-  const users = await User.find({
-    _id: { $nin: Array.from(hideUsers) },
-  })
-    .select("firstName lastName photoUrl about")
-    .skip(skip)
-    .limit(limit);
+    return users;
 
-  return users;
+  } catch (error) {
+    console.log("FEED ERROR:", error);
+    throw new AppError(error.message, 500);
+  }
 };
 
-
-module.exports = {
-  getFeedUsersService,
-};
+module.exports = { getFeedUsers };

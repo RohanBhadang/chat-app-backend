@@ -18,13 +18,7 @@ const io = new Server(server, {
 });
 
 socketHandler(io);
-io.on("connection",(socket)=>{
-  console.log("CONNECTED:", socket.id);
 
-  socket.on("disconnect",(reason)=>{
-    console.log("DISCONNECTED:", socket.id, reason);
-  });
-});
 
 server.listen(process.env.PORT, () => {
   console.log("Server running on port", process.env.PORT);

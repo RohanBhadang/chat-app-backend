@@ -3,7 +3,7 @@ const router = express.Router();
 
 const asyncHandler = require("../middlewares/asyncHandler");
 const authMiddleware = require("../middlewares/auth.middleware");
-const chatMiddleware = require("../middlewares/chat.middleware"); // 👈 ADD THIS
+const chatMiddleware = require("../middlewares/chat.middleware"); 
 const chatController = require("../controllers/chat.controller");
 
 // Protect all chat routes

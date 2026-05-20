@@ -7,8 +7,14 @@ const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const requestRoutes =require("./routes/request.routes");
 const app = express();
+const CLIENT_URL = process.env.CLIENT_URL || process.env.CORS_ORIGIN || "*";
+const corsOptions = {
+  origin: CLIENT_URL,
+  credentials: true,
+};
+
 console.log("Auth routes loaded");
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);

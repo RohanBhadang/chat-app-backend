@@ -1,6 +1,6 @@
 const User = require("../models/User.model.js");
 const ConnectionRequest = require("../models/ConnectionRequest.model.js");
-const AppError = require("../utils/appError.js");
+const AppError = require("../utils/AppError");
 
 
 const getFeedUsers = async (currentUserId) => {

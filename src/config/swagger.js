@@ -1,9 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 
-const routesPath = "src/routes/*.js";
-
-console.log("Swagger Routes Path:", routesPath);
-
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -17,34 +13,18 @@ const options = {
     servers: [
       {
         url: "http://localhost:9000",
-      },{
-        url:"https://chatapi-9j7w.onrender.com"
       },
-
-    ],
-
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
-
-    security: [
       {
-        bearerAuth: [],
+        url: "https://chatapi-9j7w.onrender.com",
       },
     ],
   },
 
-  apis: [routesPath],
+  apis: ["./src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-console.log(JSON.stringify(swaggerSpec.paths, null, 2));
+console.log(swaggerSpec.paths);
 
 module.exports = swaggerSpec;

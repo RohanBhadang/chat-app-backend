@@ -22,14 +22,14 @@ const CLIENT_URL =
   process.env.CORS_ORIGIN ||
   "*";
 
-const corsOptions = {
-  origin: CLIENT_URL,
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: CLIENT_URL,
+//   credentials: true,
+// };
 
 console.log("Routes loaded");
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 
